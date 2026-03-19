@@ -3,15 +3,15 @@
 # _list file [pattern]
 _list(){
 if [ "$2" = "" ]; then
-    gpg -d < $1 2> /dev/null | cut -f 1 -d ' '
+    gpg -d < $1 2> /dev/null | tr "\t" " " | tr -s " " | cut -f 1,3-20 -d ' ' | column -t -s "="
 else
-    gpg -d < $1 2> /dev/null | cut -f 1 -d ' ' | fgrep -i $2
+    gpg -d < $1 2> /dev/null | tr "\t" " " | tr -s " " | cut -f 1,3-20 -d ' ' | fgrep -i $2 | column -t -s "="
 fi
 }
 
 # _show file key
 _show(){
-gpg -d < $1 2> /dev/null | fgrep -w $2 | cut -f 2 -d ' ' 
+gpg -d < $1 2> /dev/null | tr "\t" " " | tr -s " " | fgrep -w $2 | cut -f 2 -d ' ' 
 }
 
 
@@ -23,7 +23,7 @@ gpg -d < $1 2> /dev/null | fgrep -w $2 | cut -f 2 -d ' '
 _file=gpass.db
 
 if [ "$1" = "" ];
-    then echo "No key" && exit 1
+    then echo "No key" ; echo "Try: gpass.sh -l" && exit 1
 fi
 
 case "$1" in
